@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center">
+  <h1 class="mb-3">Bancas</h1>
+  
+</div>
+<div class="row">
+  {% for banca in bancas %}
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ banca.nome_banca }}</h5>
+          <p class="card-text">{{ banca.descricao }}</p>
+          <a class="btn btn-primary" href="/banca/{{ banca.id }}/">Ver banca</a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p>Nenhuma banca cadastrada.</p>
+  {% endfor %}
+</div>
+
+<div class="text-center">
+  <h2 class="mt-4">Produtos</h2>
+  
+</div>
+<div class="row">
+  {% for produto in produtos %}
+    <div class="col-md-3 mb-3">
+      <div class="card h-100">
+        <img src="{% if produto.foto %}{{ produto.foto.url }}{% elif produto.nome == 'Maçã' %}/media/produtos/maca.png{% else %}https://via.placeholder.com/400x300?text=Produto{% endif %}" class="card-img-top" alt="{{ produto.nome }}">
+        <div class="card-body d-flex flex-column">
+          <h6 class="card-title">{{ produto.nome }}</h6>
+          <p class="mb-1">Banca: <a href="/banca/{{ produto.banca.id }}/">{{ produto.banca.nome_banca }}</a></p>
+          <p class="mb-3">Preço: R$ {{ produto.preco }}</p>
+          <div class="mt-auto">
+            <a class="btn btn-outline-primary btn-sm" href="/produto/{{ produto.id }}/">Detalhes</a>
+            <form method="post" action="/carrinho/add/{{ produto.id }}/" class="d-inline">
+              {% csrf_token %}
+              <button class="btn btn-success btn-sm">Adicionar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p>Nenhum produto disponível.</p>
+  {% endfor %}
+</div>
+{% endblock %}

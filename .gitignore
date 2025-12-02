@@ -1,0 +1,15 @@
+# Ambiente e IDE
+.venv/
+venv/
+__pycache__/
+.vscode/
+.idea/
+
+# Arquivos locais
+db.sqlite3
+media/
+staticfiles/
+
+# Pastas que não devem ir para o GitHub
+.trae/
+Docs/

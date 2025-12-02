@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Pedidos Recebidos</h1>
+<ul class="list-group">
+  {% for pedido in pedidos %}
+    <li class="list-group-item">
+      <div class="d-flex justify-content-between align-items-center">
+        <span>#{{ pedido.id }} • {{ pedido.cliente.username }} • {{ pedido.get_status_display }}</span>
+        <form method="post" action="/dashboard/pedidos/update-status/{{ pedido.id }}/">
+          {% csrf_token %}
+          <select name="status" class="form-select form-select-sm" style="width:auto; display:inline-block">
+            <option value="novo" {% if pedido.status == 'novo' %}selected{% endif %}>Novo</option>
+            <option value="em_separacao" {% if pedido.status == 'em_separacao' %}selected{% endif %}>Em Separação</option>
+            <option value="pronto" {% if pedido.status == 'pronto' %}selected{% endif %}>Pronto</option>
+            <option value="entregue" {% if pedido.status == 'entregue' %}selected{% endif %}>Entregue</option>
+          </select>
+          <button class="btn btn-sm btn-primary">Atualizar</button>
+        </form>
+      </div>
+    </li>
+  {% empty %}
+    <li class="list-group-item">Sem pedidos no momento.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

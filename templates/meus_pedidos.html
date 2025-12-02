@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Meus Pedidos</h1>
+<ul class="list-group">
+  {% for pedido in pedidos %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span>Pedido #{{ pedido.id }} - {{ pedido.get_status_display }}</span>
+      <div>
+        <a class="btn btn-sm btn-outline-primary me-2" href="/meus-pedidos/{{ pedido.qr_code_id }}/">Detalhes</a>
+        <form method="post" action="/meus-pedidos/deletar/{{ pedido.id }}/" class="d-inline">
+          {% csrf_token %}
+          <button class="btn btn-sm btn-outline-danger">Apagar</button>
+        </form>
+      </div>
+    </li>
+  {% empty %}
+    <li class="list-group-item">Você ainda não tem pedidos.</li>
+  {% endfor %}
+ </ul>
+{% endblock %}

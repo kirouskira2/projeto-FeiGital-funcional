@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Meus Produtos</h1>
+<table class="table">
+  <thead><tr><th>Nome</th><th>Preço</th><th>Disponível</th><th>Ações</th></tr></thead>
+  <tbody>
+  {% for p in produtos %}
+    <tr>
+      <td>{{ p.nome }}</td>
+      <td>R$ {{ p.preco }}</td>
+      <td>{{ p.disponibilidade|yesno:"Sim,Não" }}</td>
+      <td>
+        <a class="btn btn-sm btn-primary" href="/dashboard/produtos/editar/{{ p.id }}/">Editar</a>
+        <a class="btn btn-sm btn-danger" href="/dashboard/produtos/deletar/{{ p.id }}/">Deletar</a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="4">Nenhum produto cadastrado.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+<a class="btn btn-success" href="/dashboard/produtos/novo/">Novo Produto</a>
+{% endblock %}

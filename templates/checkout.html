@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Checkout</h1>
+<ul class="list-group mb-3">
+  {% for pid, item in carrinho.items %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <strong>{{ item.nome }}</strong>
+        <div class="text-muted">Quantidade: {{ item.quantidade }}</div>
+      </div>
+      <span>Preço unitário: R$ {{ item.preco|floatformat:2 }}</span>
+    </li>
+  {% empty %}
+    <li class="list-group-item">Sem itens no carrinho.</li>
+  {% endfor %}
+</ul>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <strong>Total: R$ {{ total_carrinho|floatformat:2 }}</strong>
+</div>
+<form method="post" action="/finalizar-pedido/">
+  {% csrf_token %}
+  <button class="btn btn-primary">Finalizar Pedido</button>
+  <a class="btn btn-secondary" href="/carrinho/">Voltar ao carrinho</a>
+</form>
+{% endblock %}

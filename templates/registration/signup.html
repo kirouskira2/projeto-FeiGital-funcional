@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Cadastro</h1>
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Usuário</label>
+    <input name="username" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">E-mail</label>
+    <input name="email" type="email" class="form-control" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Senha</label>
+    <input name="password" type="password" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Tipo de Usuário</label>
+    <select name="tipo_usuario" class="form-select" required>
+      <option value="cliente">Cliente</option>
+      <option value="feirante">Feirante</option>
+    </select>
+  </div>
+  <button class="btn btn-primary" type="submit">Cadastrar</button>
+  <a class="btn btn-secondary" href="/">Cancelar</a>
+{% endblock %}

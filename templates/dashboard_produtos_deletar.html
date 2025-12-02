@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Deletar Produto</h1>
+<p>Confirma a remoção de <strong>{{ produto.nome }}</strong>?</p>
+<form method="post">
+  {% csrf_token %}
+  <button class="btn btn-danger">Deletar</button>
+  <a class="btn btn-secondary" href="/dashboard/produtos/">Cancelar</a>
+</form>
+{% endblock %}
