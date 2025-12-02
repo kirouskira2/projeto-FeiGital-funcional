@@ -1,20 +1,17 @@
 # FeiGital
 
-Aplicação de feira virtual para que feirantes cadastrem suas bancas e produtos. Clientes podem montar um carrinho com itens de diferentes bancas, finalizar um pedido único e retirar usando QR Code.
+Esse é o nosso projeto de feira virtual. O objetivo é deixar os feirantes cadastrarem as bancas e produtos deles, e os clientes conseguirem comprar de várias bancas ao mesmo tempo. No final o sistema gera um QR Code para retirar o pedido.
 
-## Objetivo
-- Permitir a venda organizada por banca.
-- Oferecer carrinho unificado para o cliente.
-- Gerar QR Code para retirada do pedido.
-- Mostrar resumo de vendas para o feirante.
+Coisas principais do sistema:
+- Venda de produtos por banca
+- Carrinho de compras único (junta tudo num lugar só)
+- Gera QR Code pra retirada
+- O feirante consegue ver o total de vendas dele
 
-## Instalação
-1. Criar e ativar o ambiente virtual.
-2. Instalar as dependências.
-3. Aplicar migrações.
-4. Rodar o servidor.
+Como rodar o projeto:
+Tem que criar o ambiente virtual, instalar os requisitos e rodar as migrações.
 
-Comandos (Windows):
+Comandos pro Windows:
 ```
 python -m venv .venv
 .\.venv\Scripts\activate
@@ -22,15 +19,9 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
-Acesse: `http://127.0.0.1:8000`
+Depois é só abrir http://127.0.0.1:8000
 
-## Principais Funcionalidades
-- Autenticação com tipos de usuário: Feirante e Cliente.
-- Feirante: CRUD de produtos, gestão de pedidos e resumo de vendas.
-- Cliente: carrinho na sessão, checkout e histórico de pedidos.
-- QR Code: página do pedido exibe o QR para retirada.
-
-## Observações
-- Banco de dados em SQLite para desenvolvimento.
-- Imagens de produtos são salvas em `media/`.
-- Para produção, configurar `DEBUG=False`, `ALLOWED_HOSTS` e armazenamento de mídia/estáticos.
+Observações:
+- Tem login de Feirante e Cliente.
+- O banco de dados é o SQLite padrão.
+- As imagens ficam salvas na pasta media/.
