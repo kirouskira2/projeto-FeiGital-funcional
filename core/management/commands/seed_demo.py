@@ -18,18 +18,16 @@ class Command(BaseCommand):
         feirante, created = User.objects.get_or_create(
             username='feirante', defaults={'email': 'feirante@example.com'}
         )
-        if created:
-            feirante.set_password('feirante123')
-            feirante.save()
+        feirante.set_password('feirante123')
+        feirante.save()
         Profile.objects.get_or_create(user=feirante, defaults={'tipo_usuario': 'feirante'})
 
         # Usuário cliente com perfil
         cliente, created = User.objects.get_or_create(
             username='cliente', defaults={'email': 'cliente@example.com'}
         )
-        if created:
-            cliente.set_password('cliente123')
-            cliente.save()
+        cliente.set_password('cliente123')
+        cliente.save()
         Profile.objects.get_or_create(user=cliente, defaults={'tipo_usuario': 'cliente'})
 
         # Banca do feirante
@@ -85,6 +83,3 @@ class Command(BaseCommand):
             )
 
         self.stdout.write(self.style.SUCCESS('Seed concluído: usuários feirante/cliente, banca, 3 produtos e 1 pedido criados.'))
-
-
-// ... existing code ...
