@@ -40,7 +40,6 @@ class Command(BaseCommand):
         )
 
         # Função auxiliar: gera uma imagem simples com Pillow
-        # Porquê: evitamos dependência de rede e garantimos um arquivo válido para ImageField.
         def gerar_imagem_rgb(cor_hex: str) -> ContentFile:
             img = Image.new('RGB', (600, 400), cor_hex)
             bio = BytesIO()
@@ -49,7 +48,6 @@ class Command(BaseCommand):
 
         validade = timezone.now().date() + timedelta(days=7)
 
-        # Porquê: nomes de arquivos ASCII evitam problemas de encoding em URLs/SO.
         def ascii_slug(text: str) -> str:
             normalized = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii')
             return normalized.lower().replace(' ', '-')
@@ -70,7 +68,6 @@ class Command(BaseCommand):
                     'disponibilidade': True,
                 },
             )
-            # Porquê: garantimos que cada produto tenha uma imagem mesmo em ambientes de teste.
             if created or not produto.foto:
                 conteudo = gerar_imagem_rgb(info['cor'])
                 safe_name = f"{ascii_slug(info['nome'])}.png"
@@ -84,7 +81,10 @@ class Command(BaseCommand):
                 pedido=pedido,
                 produto=p,
                 quantidade=idx,  # quantidades 1,2,3 para variar subtotais
-                preco_unitario=p.preco,  # porquê: preço "congelado" conforme regra de negócio
+                preco_unitario=p.preco,
             )
 
         self.stdout.write(self.style.SUCCESS('Seed concluído: usuários feirante/cliente, banca, 3 produtos e 1 pedido criados.'))
+
+
+// ... existing code ...
