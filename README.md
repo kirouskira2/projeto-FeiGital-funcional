@@ -12,7 +12,8 @@ Aplicação de feira virtual para que feirantes cadastrem suas bancas e produtos
 1. Criar e ativar o ambiente virtual.
 2. Instalar as dependências.
 3. Aplicar migrações.
-4. Rodar o servidor.
+4. Popular o banco de dados (cria usuários, produtos e imagens).
+5. Rodar o servidor.
 
 Comandos (Windows):
 ```
@@ -24,6 +25,12 @@ python manage.py seed_demo
 python manage.py runserver
 ```
 Acesse: `http://127.0.0.1:8000`
+
+## Credenciais de Acesso (Demo)
+Após rodar o `seed_demo`, utilize estas contas para testar:
+- **Admin**: `admin` / `admin123` (Acesso total ao Django Admin)
+- **Feirante**: `feirante` / `feirante123` (Gestão de banca e produtos)
+- **Cliente**: `cliente` / `cliente123` (Compra e carrinho)
 
 ## Principais Funcionalidades
 - Autenticação com tipos de usuário: Feirante e Cliente.
