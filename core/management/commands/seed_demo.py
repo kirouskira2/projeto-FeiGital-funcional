@@ -5,6 +5,9 @@ from datetime import timedelta
 from io import BytesIO
 from PIL import Image
 import unicodedata
+import os
+from django.conf import settings
+from django.core.files import File
 from django.core.files.base import ContentFile
 
 from core.models import Profile, Banca, Produto, Pedido, ItensPedido
@@ -14,28 +17,55 @@ class Command(BaseCommand):
     help = 'Cria dados de demonstração: feirante/cliente, banca, 3 produtos com foto e 1 pedido.'
 
     def handle(self, *args, **options):
+        # Cria superuser admin se não existir
+        if not User.objects.filter(username='admin').exists():
+            User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+            self.stdout.write(self.style.SUCCESS('Superuser "admin" criado (senha: admin123).'))
+
         # Usuário feirante com perfil
         feirante, created = User.objects.get_or_create(
             username='feirante', defaults={'email': 'feirante@example.com'}
         )
-        feirante.set_password('feirante123')
-        feirante.save()
+        if created:
+            feirante.set_password('feirante123')
+            feirante.save()
         Profile.objects.get_or_create(user=feirante, defaults={'tipo_usuario': 'feirante'})
 
         # Usuário cliente com perfil
         cliente, created = User.objects.get_or_create(
             username='cliente', defaults={'email': 'cliente@example.com'}
         )
-        cliente.set_password('cliente123')
-        cliente.save()
+        if created:
+            cliente.set_password('cliente123')
+            cliente.save()
         Profile.objects.get_or_create(user=cliente, defaults={'tipo_usuario': 'cliente'})
 
+        # Função auxiliar para buscar imagem estática
+        def get_static_image(filename):
+            path = os.path.join(settings.BASE_DIR, 'static', 'img', filename)
+            if os.path.exists(path):
+                return path
+            # Tenta extensões diferentes se não achar a exata
+            base, ext = os.path.splitext(filename)
+            for alt_ext in ['.png', '.jpg', '.jpeg', '.PNG', '.JPG']:
+                path = os.path.join(settings.BASE_DIR, 'static', 'img', base + alt_ext)
+                if os.path.exists(path):
+                    return path
+            return None
+
         # Banca do feirante
-        banca, _ = Banca.objects.get_or_create(
+        banca, created_banca = Banca.objects.get_or_create(
             dono=feirante,
             nome_banca='Banca do João',
             defaults={'descricao': 'Produtos frescos e selecionados'}
         )
+        
+        # Tenta atribuir logo à banca
+        if not banca.logo:
+            img_banca = get_static_image('seu joao.PNG') or get_static_image('logo-feigital.png.jpg')
+            if img_banca:
+                with open(img_banca, 'rb') as f:
+                    banca.logo.save(os.path.basename(img_banca), File(f), save=True)
 
         # Função auxiliar: gera uma imagem simples com Pillow
         def gerar_imagem_rgb(cor_hex: str) -> ContentFile:
@@ -49,6 +79,7 @@ class Command(BaseCommand):
         def ascii_slug(text: str) -> str:
             normalized = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii')
             return normalized.lower().replace(' ', '-')
+            
         produtos_info = [
             {'nome': 'Maçã', 'preco': 4.50, 'cor': '#d9534f'},
             {'nome': 'Banana', 'preco': 3.20, 'cor': '#f0ad4e'},
@@ -66,10 +97,21 @@ class Command(BaseCommand):
                     'disponibilidade': True,
                 },
             )
+            
             if created or not produto.foto:
-                conteudo = gerar_imagem_rgb(info['cor'])
-                safe_name = f"{ascii_slug(info['nome'])}.png"
-                produto.foto.save(safe_name, conteudo, save=True)
+                # Tenta encontrar imagem estática correspondente ao nome
+                slug_name = ascii_slug(info['nome'])
+                static_img = get_static_image(f"{slug_name}.png") or get_static_image(f"{slug_name}.jpg")
+                
+                if static_img:
+                    with open(static_img, 'rb') as f:
+                        produto.foto.save(os.path.basename(static_img), File(f), save=True)
+                else:
+                    # Fallback para imagem gerada
+                    conteudo = gerar_imagem_rgb(info['cor'])
+                    safe_name = f"{slug_name}.png"
+                    produto.foto.save(safe_name, conteudo, save=True)
+                    
             produtos.append(produto)
 
         # Pedido de demonstração para o cliente (mostra QR Code e facilita avaliação)
