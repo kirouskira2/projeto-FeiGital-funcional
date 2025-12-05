@@ -42,3 +42,4 @@ Após rodar o `seed_demo`, utilize estas contas para testar:
 - Banco de dados em SQLite para desenvolvimento.
 - Imagens de produtos são salvas em `media/`.
 - Para produção, configurar `DEBUG=False`, `ALLOWED_HOSTS` e armazenamento de mídia/estáticos.
+- EQUIPE - PEDRO LUCAS SANTOS DE ARAÚJO
